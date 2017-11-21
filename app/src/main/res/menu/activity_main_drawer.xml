@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/your_repos"
+            android:icon="@drawable/ic_menu_repos"
+            android:title="@string/my_repositories"/>
+        <item
+            android:id="@+id/search_repos"
+            android:icon="@drawable/ic_menu_search"
+            android:title="@string/search_repositories"/>
+
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/log_out"
+            android:icon="@drawable/ic_menu_logout"
+            android:title="@string/log_out"/>
+    </group>
+
+</menu>
