@@ -15,7 +15,7 @@ public class GitHubClient {
 
     private final String CLIENT_ID = "260a01d3966085fdefb4";
     private final String CLIENT_SECRET = "3fc85da7cf473b0a2624ea95b64019e4238eee21";
-    private final String ITEMS_PER_PAGE = "50";
+    private final String ITEMS_PER_PAGE = "100";
 
     private GitHubService mGitHubService;
 

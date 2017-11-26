@@ -4,18 +4,23 @@ package com.makhovyk.android.githubsearch.View;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.makhovyk.android.githubsearch.Presenter.LoginPresenterImpl;
 import com.makhovyk.android.githubsearch.R;
+import com.makhovyk.android.githubsearch.Utils.InternetConnection;
 import com.makhovyk.android.githubsearch.Utils.SessionManager;
 
 
@@ -45,7 +50,7 @@ public class LoginFragment extends Fragment implements LoginView{
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-        String url = OAUTH_URL + "?client_id=" + CLIENT_ID + "&scope=repo&redirect_uri=" + CALLBACK_URL;
+
 
         mWebView = (WebView)v.findViewById(R.id.login_web_view);
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -70,12 +75,37 @@ public class LoginFragment extends Fragment implements LoginView{
 
                 return true;
             }
+
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                view.stopLoading();
+                if (!InternetConnection.isNetworkAvailable(getActivity().getApplicationContext())){
+                    showSnackBar("Please check your internet connection!");
+                }
+            }
         });
-        mWebView.loadUrl(url);
+
+
 
         return v;
     }
 
+    public void loadUrl(){
+        String url = OAUTH_URL + "?client_id=" + CLIENT_ID + "&scope=repo&redirect_uri=" + CALLBACK_URL;
+        if (InternetConnection.isNetworkAvailable(getActivity().getApplicationContext())) {
+
+            mWebView.loadUrl(url);
+        }else {
+            showSnackBar("Please check your internet connection!");
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadUrl();
+    }
 
     @Override
     public void navigateToUserRepos() {
@@ -90,5 +120,19 @@ public class LoginFragment extends Fragment implements LoginView{
     public void onAttach(Context context) {
         super.onAttach(context);
         callback = (OnUserDataUpdated) context;
+    }
+
+    @Override
+    public void showSnackBar(String message) {
+        View root = getActivity().findViewById(R.id.login_web_view);
+        Snackbar snackbar = Snackbar
+                .make(root, message,Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Reload", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadUrl();
+            }
+        });
+        snackbar.show();
     }
 }

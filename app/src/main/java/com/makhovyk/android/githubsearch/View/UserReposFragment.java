@@ -54,12 +54,12 @@ public class UserReposFragment extends Fragment implements UserReposView {
         mUserRepoRecyclerView = (RecyclerView) view.findViewById(R.id.user_repos_recycler_view);
         mUserRepoRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLoadingProgressBar = (ProgressBar) view.findViewById(R.id.loading_progress_bar);
-
-        if (mItems.isEmpty()) {
-            mUserReposPresenter.getUserRepos();
-        }else {
-            mUserRepoRecyclerView.setAdapter(new UserRepoAdapter(mItems));
-        }
+        mUserReposPresenter.getUserRepos();
+//        if (mItems.isEmpty()) {
+//            mUserReposPresenter.getUserRepos();
+//        }else {
+//            mUserRepoRecyclerView.setAdapter(new UserRepoAdapter(mItems));
+//        }
 
         return view;
     }
